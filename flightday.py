@@ -29,7 +29,6 @@ try:
     while True:
         check_alt = bme280.altitude
         if check_alt-init_alt > 599: #checks if it has gone high, no point taking pictures the way up   
-            way_up_or_down+=1
             check_alt = bme280.altitude
             if check_alt-init_alt < 500: #or whatever feet below which we should start taking photos
                 while check_alt>50:
