@@ -7,6 +7,7 @@ import pickle
 import time
 
 camera=PiCamera()
+start_time = time.time()
 
 try:
     i2c = board.I2C()
@@ -36,7 +37,8 @@ try:
                     #if the below doesn't work, add r before the first quote
                     camera.capture("/home/pi/Downloads/subscale_test_imgs/img_%s.jpg" % img_no) #take a picture, for CDR we can probably just save these but we need to get numpy working for analysis
                     img_no+=1
-                    altitudes_list.append(check_alt)
+                    current_time = time.time()-start_time
+                    altitudes_list.append(["alt"+check_alt, "time: "+current_time])
                     check_alt = bme280.altitude
                 break
 
