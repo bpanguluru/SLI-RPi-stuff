@@ -36,7 +36,7 @@ try:
         if check_alt > 50: #take pictures whenever alt is greater than 50 meters
             #if the below doesn't work, add r before the first quote
             current_time = time.time()-start_time
-            camera.capture("/home/pi/Downloads/subscale_test_imgs/img_" + str(img_no) + "_height" + str(bme280.altitude) + "m_time" + current_time) #take a picture, for CDR we can probably just save these but we need to get numpy working for analysis
+            camera.capture("/home/pi/Downloads/subscale_test_imgs/img_" + str(img_no) + "_height" + str(bme280.altitude) + "m_time" + str(current_time)+".jpg") #take a picture, for CDR we can probably just save these but we need to get numpy working for analysis
             altitudes_list.append(["alt: "+ str(check_alt), "time: "+ str(current_time), "img_no: " + str(img_no)])
             img_no+=1
         if check_alt > 100:
