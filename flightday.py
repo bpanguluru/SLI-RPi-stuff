@@ -1,6 +1,5 @@
 #commented to not cause issues at boot right now
-
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from picamera import PiCamera
 import board
 import digitalio
