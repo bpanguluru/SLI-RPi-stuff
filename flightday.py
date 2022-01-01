@@ -4,14 +4,15 @@ import board
 import digitalio
 from adafruit_bme280 import basic as adafruit_bme280
 import pickle
-from time import sleep
+import time
 
 camera=PiCamera()
 
 try:
-    spi = board.SPI()
-    bme_cs = digitalio.DigitalInOut(board.D10)
-    bme280 = adafruit_bme280.Adafruit_BME280_SPI(spi, bme_cs) #sea level pressure at FAR is 29.34Hg which is 993.566hPA
+    i2c = board.I2C()
+    bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
+    #bme_cs = digitalio.DigitalInOut(board.D10)
+    #bme280 = adafruit_bme280.Adafruit_BME280_SPI(spi, bme_cs) #sea level pressure at FAR is 29.34Hg which is 993.566hPA
     bme280.sea_level_pressure = 993.566
     altitutes_list = []
     img_no = 0
@@ -47,6 +48,7 @@ try:
         b=pickle.load(fp)
     print(b)
 except:
+    print("failed")
     sleep(200)
     for i in range(2000):
         print("picture-taking rn")
