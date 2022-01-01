@@ -14,7 +14,7 @@ try:
     bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
     #bme_cs = digitalio.DigitalInOut(board.D10)
     #bme280 = adafruit_bme280.Adafruit_BME280_SPI(spi, bme_cs) #sea level pressure at FAR is 29.34Hg which is 993.566hPA
-    # bme280.sea_level_pressure = 993.566 # don't need to do this
+    bme280.sea_level_pressure = 993.566 # don't need to do this
     altitutes_list = []
     img_no = 0
     #add some conditional regarding if the button has been pressed to encompass all this
