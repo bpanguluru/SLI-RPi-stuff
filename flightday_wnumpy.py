@@ -56,7 +56,10 @@ GPIO.output(17, GPIO.LOW)
 sleep(2)
 print("led")
 
-topleftcoords=[]
+open_file = open(r"C:\Users\g_bab\Downloads\gps_topleftcoords.pkl", "rb")
+topleftcoords = pickle.load(open_file)
+open_file.close()
+#print(len(loaded_list))
 x_incr = -117.809809 + 117.808915
 y_incr = 35.347124 - 35.346395
 
@@ -182,7 +185,7 @@ try:
     print(b)
 except:
     print("f")
-    sleep(200)
+    sleep(230)
     #for i in range(2000):
         #print("picture-taking rn")
         #img_no = i
