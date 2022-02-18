@@ -57,8 +57,8 @@ sleep(2)
 print("led")
 
 topleftcoords=[]
-x_incr = 
-y_incr = 
+x_incr = -117.809809 + 117.808915
+y_incr = 35.347124 - 35.346395
 
 def contains_blue(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
