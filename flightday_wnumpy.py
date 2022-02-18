@@ -14,6 +14,20 @@ import board
 import busio
 import adafruit_gps
 import serial
+
+import adafruit_rfm9x
+from digitalio import DigitalInOut, Direction, Pull
+
+i2c = busio.I2C(board.SCL, board.SDA)
+
+CS = DigitalInOut(board.CE1)
+RESET = DigitalInOut(board.D25)
+spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
+
+rfm9x = adafruit_rfm9x.RFM9x(spi, CS, RESET, 433.0)
+rfm.tx_powerr = 23
+#rfm9x.send() or rfm.9x.receive()
+
 uart = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=10)
 gps = adafruit_gps.GPS(uart, debug=False)
 gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
@@ -82,7 +96,7 @@ try:
         init_alt+=calib_alt
     init_alt = init_alt/100
     print(init_alt)
-    
+    match = 1
     checkPass = 0 
     while True:
         check_alt = bme280.altitude
@@ -147,8 +161,17 @@ try:
 
     final_mode = stats.mode(guesses)
     final_guess = final_mode[0][0]
-    print(final_guess)
-    
+    #print(final_guess)
+    firstsqr = 0
+    for coords in topleftcoords:
+        firstsqr+=1
+        if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
+            if (xlong >= coords[1] and xlong <= coords[1]):
+                break
+    if match == 1:
+        rfm9x.send("{} {} {} {}",format(1, coords[0], coords[1]), firstsqr)
+    else:
+       rfm9x.send("{} {} {} {}",format(0, coords[0], coords[1]), firstsqr)
 
 
 #so we can look at altitudes corresponding to img#
@@ -175,6 +198,7 @@ except:
         if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
             if (xlong >= coords[1] and xlong <= coords[1]):
                 break
+    rfm9x.send("{} {} {} {}",format(1, coords[0], coords[1]), sqr)
     
         
     
