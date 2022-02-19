@@ -221,8 +221,8 @@ except:
     sqr = 0
     for coords in topleftcoords:
         sqr+=1
-        if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
-            if (xlong >= coords[1] and xlong <= coords[1]+x_incr):
+        if (ylat <= coords[0] and ylat >= (coords[0] - y_incr)):
+            if (xlong <= coords[1] and xlong >= (coords[1]+x_incr)):
                 break
     while True:
         rfm9x.send("{} {} {} {}",format(1, coords[0], coords[1]), sqr)
