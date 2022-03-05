@@ -238,11 +238,15 @@ try:
     if match == 1:
         with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
             f.write("{} {} {} {}".format(match, ylat, xlong, firstsqr))
+        with open("altitudes_list", "wb") as fp:
+            pickle.dump(altitudes_list,fp)
         for i in range(15):
             rfm9x.send(bytes("{} {} {} {}".format(match, ylat, xlong, firstsqr),"utf-8"))
     else:
         with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
             f.write("{} {} {} {}".format(match, ylat, xlong, firstsqr))
+        with open("altitudes_list", "wb") as fp:
+            pickle.dump(altitudes_list,fp)
         for i in range(15):
             rfm9x.send(bytes("{} {} {} {}".format(match, ylat, xlong, firstsqr)), "utf-8")
     
