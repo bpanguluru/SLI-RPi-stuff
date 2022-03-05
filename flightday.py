@@ -191,7 +191,7 @@ try:
     gps.update()
     ylat = gps.latitude
     xlong = gps.longitude
-    firstsqr = 0
+    firstsqr = -1
     for coords in topleftcoords:
         firstsqr+=1
         if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
@@ -225,7 +225,7 @@ try:
     gps.update()
     ylat = gps.latitude
     xlong = gps.longitude 
-    firstsqr = 0
+    firstsqr = -1
     for coords in topleftcoords:
         firstsqr+=1
         if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
@@ -237,14 +237,14 @@ try:
     
     if match == 1:
         with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
-            f.write("{} {} {} {}".format(1, ylat, xlong, firstsqr))
+            f.write("{} {} {} {}".format(match, ylat, xlong, firstsqr))
         for i in range(15):
-            rfm9x.send(bytes("{} {} {} {}".format(1, ylat, xlong, firstsqr),"utf-8"))
+            rfm9x.send(bytes("{} {} {} {}".format(match, ylat, xlong, firstsqr),"utf-8"))
     else:
         with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
-            f.write("{} {} {} {}".format(0, ylat, xlong, firstsqr))
+            f.write("{} {} {} {}".format(match, ylat, xlong, firstsqr))
         for i in range(15):
-            rfm9x.send(bytes("{} {} {} {}".format(0, ylat, xlong, firstsqr)), "utf-8")
+            rfm9x.send(bytes("{} {} {} {}".format(match, ylat, xlong, firstsqr)), "utf-8")
     
     for i in range(len(img_list) - etc_counter):  #for each pi cam image
         test_keypoints, test_descriptors = sift.detectAndCompute(img_list[i+etc_counter],None)      #calculate descriptor of that image
@@ -270,7 +270,7 @@ try:
     gps.update()
     ylat = gps.latitude
     xlong = gps.longitude 
-    firstsqr = 0
+    firstsqr = -1
     for coords in topleftcoords:
         firstsqr+=1
         if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
@@ -282,14 +282,14 @@ try:
     
     if match == 1:
         with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
-            f.write("{} {} {} {}".format(1, ylat, xlong, firstsqr))
+            f.write("{} {} {} {}".format(match, ylat, xlong, firstsqr))
         while True:
-            rfm9x.send(bytes("{} {} {} {}".format(1, ylat, xlong, firstsqr),"utf-8"))
+            rfm9x.send(bytes("{} {} {} {}".format(match, ylat, xlong, firstsqr),"utf-8"))
     else:
         with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
-            f.write("{} {} {} {}".format(1, ylat, xlong, firstsqr))
+            f.write("{} {} {} {}".format(match, ylat, xlong, firstsqr))
         while True:
-            rfm9x.send(bytes("{} {} {} {}".format(0, ylat, xlong, firstsqr)), "utf-8")
+            rfm9x.send(bytes("{} {} {} {}".format(match, ylat, xlong, firstsqr)), "utf-8")
     
     with open("altitudes_list", "wb") as fp:
         pickle.dump(altitudes_list,fp)
@@ -312,13 +312,13 @@ except:
     ylat = gps.latitude
     xlong = gps.longitude
     print(lat, long)
-    sqr = 0
+    sqr = -1
     for coords in topleftcoords:
         sqr+=1
         if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
             if (xlong <= coords[1] and xlong >= coords[1]+x_incr):
                 break
     with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
-            f.write("{} {} {} {}".format(0, ylat, xlong, firstsqr))
+            f.write("{} {} {} {}".format(match, ylat, xlong, firstsqr))
     while True:
-        rfm9x.send(bytes("{} {} {} {}".format(0, ylat, xlong, sqr), "utf-8"))
+        rfm9x.send(bytes("{} {} {} {}".format(match, ylat, xlong, sqr), "utf-8"))
