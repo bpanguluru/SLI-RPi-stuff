@@ -23,8 +23,22 @@ sleep(0.25) #might have to increase this to 2
 GPIO.output(17, GPIO.LOW)
 sleep(0.25)
 
-with open("/home/pi/Downloads/gps_topleftcoords.pkl", "rb") as pf:
-    topleftcoords = pickle.load(pf)
+x_incr =(117.808914-117.809808)
+y_incr =(35.346394-35.347125)
+start = [35.354304, -117.817844]
+newlist = []
+newlist.append(start)
+for i in range(400):
+    if i%20 == 19 and i!=0:
+        #print(len(newlist))
+        prev = newlist[len(newlist)-20]
+        add = [prev[0]+y_incr,prev[1]]
+        newlist.append(add) 
+    else: 
+        prev = newlist[-1]
+        add = [prev[0],prev[1]-x_incr]
+        newlist.append(add)
+topleftcoords = newlist
 print("loaded")
 print(topleftcoords[0])
 
@@ -80,8 +94,6 @@ sleep(0.5)
 #print("led")
 
 #print(len(loaded_list))
-x_incr = (-117.809809 + 117.808915)
-y_incr = (35.347124 - 35.346395)
 
 def contains_blue(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -182,7 +194,7 @@ try:
     firstsqr = 0
     for coords in topleftcoords:
         firstsqr+=1
-        if (ylat <= coords[0] and ylat >= (coords[0]- y_incr)):
+        if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
             if (xlong <= coords[1] and xlong >= coords[1]+x_incr):
                 break
     rfm9x.send(bytes("{} {} {} {}".format(2, ylat, xlong, firstsqr),"utf-8"))
@@ -216,7 +228,7 @@ try:
     firstsqr = 0
     for coords in topleftcoords:
         firstsqr+=1
-        if (ylat <= coords[0] and ylat >= (coords[0]- y_incr)):
+        if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
             if (xlong <= coords[1] and xlong >= coords[1]+x_incr):
                 break
     #print(b)
@@ -226,12 +238,12 @@ try:
     if match == 1:
         with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
             f.write("{} {} {} {}".format(1, ylat, xlong, firstsqr))
-        while True:
+        for i in range(15):
             rfm9x.send(bytes("{} {} {} {}".format(1, ylat, xlong, firstsqr),"utf-8"))
     else:
         with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
             f.write("{} {} {} {}".format(0, ylat, xlong, firstsqr))
-        while True:
+        for i in range(15):
             rfm9x.send(bytes("{} {} {} {}".format(0, ylat, xlong, firstsqr)), "utf-8")
     
     for i in range(len(img_list) - etc_counter):  #for each pi cam image
@@ -261,7 +273,7 @@ try:
     firstsqr = 0
     for coords in topleftcoords:
         firstsqr+=1
-        if (ylat <= coords[0] and ylat >= (coords[0]- y_incr)):
+        if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
             if (xlong <= coords[1] and xlong >= coords[1]+x_incr):
                 break
     #print(b)
@@ -303,7 +315,7 @@ except:
     sqr = 0
     for coords in topleftcoords:
         sqr+=1
-        if (ylat <= coords[0] and ylat >= (coords[0]- y_incr)):
+        if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
             if (xlong <= coords[1] and xlong >= coords[1]+x_incr):
                 break
     with open(r"/home/pi/Downloads/backup/backupresult", "w") as f:
