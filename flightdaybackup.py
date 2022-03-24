@@ -298,7 +298,10 @@ try:
     
 except:
     sleep(230)
-    gps.update()
+    while True:
+        gps.update()
+        if gps.has_fix:
+            break
     ylat = gps.latitude
     xlong = gps.longitude
     print(lat, long)
