@@ -149,19 +149,15 @@ try:
         for i in range(5):
             rfm9x.send(bytes("check_alt{}".format(check_alt-init_alt), "utf-8"))
         print("check_alt")
-        #GPIO.output(17, GPIO.HIGH)
-        #sleep(0.25) #might have to increase this to 2
-        #GPIO.output(17, GPIO.LOW)
-        #sleep(0.25)
-        print("blink")
-        #check_alt = 9000 #comment this out
 
         if (check_alt-init_alt) > 200: #checks if it has gone high, no point taking pictures the way up   
             checkPass = 1
             check_alt = bme280.altitude
             #check_alt=0 #comment this out
         if check_alt-init_alt < 150 and checkPass==1: #or whatever meters below which we should start taking photos
-            #check_alt = 10000 #comment this out
+            write_alts = open("status.txt", "w") #NEED TO MAKE THIS EMPTY TXT FILE IN THE PAYLOAD BEFOREHAND
+            write_alts.writelines("pics")
+            write_alts.close()
             while check_alt-init_alt>20:
                 rfm9x.send(bytes("pic", "utf-8"))
                 #GPIO.output(17, GPIO.HIGH)
