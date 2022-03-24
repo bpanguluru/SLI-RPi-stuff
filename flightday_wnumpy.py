@@ -178,9 +178,9 @@ try:
             if (xlong >= coords[1] and xlong <= coords[1]):
                 break
     if match == 1:
-        rfm9x.send("{} {} {} {}",format(1, coords[0], coords[1]), firstsqr)
+        rfm9x.send("{} {} {} {}".format(1, coords[0], coords[1]), firstsqr)
     else:
-       rfm9x.send("{} {} {} {}",format(0, coords[0], coords[1]), firstsqr)
+       rfm9x.send("{} {} {} {}".format(0, coords[0], coords[1]), firstsqr)
 
 
 #so we can look at altitudes corresponding to img#
@@ -207,7 +207,7 @@ except:
         if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
             if (xlong >= coords[1] and xlong <= coords[1]):
                 break
-    rfm9x.send("{} {} {} {}",format(1, coords[0], coords[1]), sqr)
+    rfm9x.send("{} {} {} {}".format(1, coords[0], coords[1]), sqr)
     
         
     
