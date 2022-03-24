@@ -60,7 +60,6 @@ spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
 
 rfm9x = adafruit_rfm9x.RFM9x(spi, CS, RESET, 433.0)
 rfm9x.tx_powerr = 23
-#rfm9x.send() or rfm.9x.receive()
 
 uart = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=10)
 gps = adafruit_gps.GPS(uart, debug=False)
@@ -71,13 +70,10 @@ last_print = time.monotonic()
 while True:
     #print("gps is searching")
     gps.update()
-    # Every second print out current location details if there's a fix.
     current = time.monotonic()
     if current - last_print >= 1.0:
         last_print = current
         if gps.has_fix:
-            # Try again if we don't have a fix yet.
-            #print("Waiting for fix...")
             break
 print("Latitude: {0:.6f} degrees".format(gps.latitude))
 print("Longitude: {0:.6f} degrees".format(gps.longitude))
@@ -87,20 +83,14 @@ GPIO.output(17, GPIO.HIGH)
 sleep(0.5) #might have to increase this to 2
 GPIO.output(17, GPIO.LOW)
 sleep(0.5)
-#GPIO.output(17, GPIO.HIGH)
-#sleep(2) #might have to increase this to 2
-#GPIO.output(17, GPIO.LOW)
-#sleep(2)
-#print("led")
 
-#print(len(loaded_list))
 
 def contains_blue(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     #range for blue 
     hsv_l = np.array([100, 150, 0])
     hsv_h = np.array([140, 255, 255])
-    # Find blue pixels in the image
+    #find blue pixels in image
     if np.count_nonzero(cv2.inRange(hsv, hsv_l, hsv_h)) > 200:
         return True
     else:
@@ -109,10 +99,6 @@ print("containsblue with cv2 cmd")
 img_list = []
 
 
-#GPIO.output(17, GPIO.HIGH)
-#sleep(2)
-#GPIO.output(17, GPIO.LOW)
-#sleep(2)
 try:
     sift = cv2.xfeatures2d.SIFT_create()
     print("siftworked")
@@ -125,11 +111,11 @@ try:
     i2c = board.I2C()
     bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c, 0x76)
     #bme_cs = digitalio.DigitalInOut(board.D10)
-    #bme280 = adafruit_bme280.Adafruit_BME280_SPI(spi, bme_cs) #sea level pressure at FAR is 29.34Hg which is 993.566hPA
+    #bme280 = adafruit_bme280.Adafruit_BME280_SPI(spi, bme_cs) 
+    #sea level pressure at FAR is 29.34Hg which is 993.566hPA
     bme280.sea_level_pressure = 993.566
     altitudes_list = []
     img_no = 0
-    #add some conditional regarding if the button has been pressed to encompass all this
 
     init_alt = 0
     for i in range(100):
@@ -160,9 +146,6 @@ try:
             write_alts.close()
             while check_alt-init_alt>20:
                 rfm9x.send(bytes("pic", "utf-8"))
-                #GPIO.output(17, GPIO.HIGH)
-                #sleep(0.02) #might have to increase this to 2
-                #GPIO.output(17, GPIO.LOW)
                 current_time = time.time()-start_time
                 #camera.capture("/home/pi/Downloads/subscale_test_imgs/img_"+str(img_no)+ "alt: "+str(round(check_alt-init_alt, 4))+"time: "+str(round(current_time,5))+".jpg") #take a picture, for CDR we can probably just save these but we need to get numpy working for analysis
                 camera.resolution = (640, 480)
