@@ -141,7 +141,11 @@ try:
     checkPass = 0 
     while True:
         check_alt = bme280.altitude
-        print("after")
+        altitudes_list.append(check_alt-init_alt)
+        #print("after")
+        write_alts = open("write_alts.txt", "w")
+        write_alts.writelines("{}".format((check_alt-init_alt)))
+        write_alts.close()
         for i in range(5):
             rfm9x.send(bytes("check_alt{}".format(check_alt-init_alt), "utf-8"))
         print("check_alt")
