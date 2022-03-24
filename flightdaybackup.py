@@ -84,7 +84,6 @@ sleep(0.5) #might have to increase this to 2
 GPIO.output(17, GPIO.LOW)
 sleep(0.5)
 
-
 def contains_blue(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     #range for blue 
@@ -97,7 +96,6 @@ def contains_blue(img):
         return False
 print("containsblue with cv2 cmd")
 img_list = []
-
 
 try:
     sift = cv2.xfeatures2d.SIFT_create()
