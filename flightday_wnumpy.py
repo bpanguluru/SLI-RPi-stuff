@@ -104,7 +104,7 @@ try:
     while True:
         check_alt = bme280.altitude
         altitudes_list.append(check_alt)
-        print(check_alt)
+        #print(check_alt)
         with open("altitudes_list", "wb") as fp:
             pickle.dump(altitudes_list,fp)
         GPIO.output(17, GPIO.HIGH)
