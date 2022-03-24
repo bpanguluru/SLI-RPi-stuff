@@ -138,7 +138,7 @@ try:
             checkPass = 1
             check_alt = bme280.altitude
             #check_alt=0 #comment this out
-        if check_alt-init_alt < 150 and checkPass==1: #or whatever meters below which we should start taking photos
+        if check_alt-init_alt < 145 and checkPass==1: #or whatever meters below which we should start taking photos
             write_alts = open("status.txt", "w") #NEED TO MAKE THIS EMPTY TXT FILE IN THE PAYLOAD BEFOREHAND
             write_alts.writelines("pics")
             write_alts.close()
