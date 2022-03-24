@@ -184,6 +184,9 @@ try:
                 #check_alt = 1000
             break
     #processing
+    write_alts = open("status.txt", "w") #NEED TO MAKE THIS EMPTY TXT FILE IN THE PAYLOAD BEFOREHAND
+    write_alts.writelines("past the loop")
+    write_alts.close()
     guesses = []
     acc_count = 0
     #sift = cv2.SIFT_create()
@@ -201,7 +204,12 @@ try:
         if (ylat <= coords[0] and ylat >= (coords[0]+ y_incr)):
             if (xlong <= coords[1] and xlong >= coords[1]+x_incr):
                 break
-    rfm9x.send(bytes("{} {} {} {}".format(2, ylat, xlong, firstsqr),"utf-8"))
+    
+    write_alts = open("status.txt", "w") #NEED TO MAKE THIS EMPTY TXT FILE IN THE PAYLOAD BEFOREHAND
+    write_alts.writelines("past stg1 processing")
+    write_alts.close()
+    for i in range(5):
+        rfm9x.send(bytes("{} {} {} {}".format(2, ylat, xlong, firstsqr),"utf-8"))
     
     etc_counter = 0
     for i in range(len(img_list)//3):  #for each pi cam image
