@@ -190,8 +190,10 @@ try:
     index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
     search_params = dict(checks = 50)
     flann = cv2.FlannBasedMatcher(index_params, search_params)
-    
-    gps.update()
+    while True:
+        gps.update()
+        if gps.has_fix:
+            break
     ylat = gps.latitude
     xlong = gps.longitude
     firstsqr = -1
@@ -203,6 +205,7 @@ try:
     
     write_alts = open("status.txt", "w") #NEED TO MAKE THIS EMPTY TXT FILE IN THE PAYLOAD BEFOREHAND
     write_alts.writelines("past stg1 processing")
+    write_alts.writelines("{} {} {} {}".format(match, ylat, xlong, firstsqr))
     write_alts.close()
     for i in range(5):
         rfm9x.send(bytes("{} {} {} {}".format(2, ylat, xlong, firstsqr),"utf-8"))
@@ -311,15 +314,7 @@ try:
 #so we can look at altitudes corresponding to img#
     
 except:
-    print("f")
-    #for i in range(230):
-        #rfm9x.send(bytes("failed", "utf-8"))
     sleep(230)
-    #for i in range(2000):
-        #print("picture-taking rn")
-        #img_no = i
-        #sleep(2)
-        #camera.capture("/home/pi/Downloads/subscale_test_imgs/img_%s.jpg" % img_no)
     gps.update()
     ylat = gps.latitude
     xlong = gps.longitude
