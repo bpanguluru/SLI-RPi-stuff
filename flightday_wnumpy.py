@@ -103,7 +103,10 @@ try:
     checkPass = 0 
     while True:
         check_alt = bme280.altitude
+        altitudes_list.append(check_alt)
         print(check_alt)
+        with open("altitudes_list", "wb") as fp:
+            pickle.dump(altitudes_list,fp)
         GPIO.output(17, GPIO.HIGH)
         sleep(0.25) #might have to increase this to 2
         GPIO.output(17, GPIO.LOW)
@@ -112,6 +115,9 @@ try:
         if check_alt-init_alt > 200: #checks if it has gone high, no point taking pictures the way up   
             checkPass = 1
             check_alt = bme280.altitude
+            altitudes_list.append(check_alt)
+            with open("altitudes_list", "wb") as fp:
+                pickle.dump(altitudes_list,fp)
             #check_alt=0 #comment this out
         if check_alt-init_alt < 150 and checkPass==1: #or whatever meters below which we should start taking photos
             #check_alt = 10000 #comment this out
