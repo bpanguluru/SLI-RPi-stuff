@@ -60,7 +60,7 @@ except:
 
 x_incr =(117.808914-117.809808)
 y_incr =(35.346394-35.347125)
-start = [35.354304, -117.817844]
+start = [32.846399, -115.273347]
 newlist = []
 newlist.append(start)
 for i in range(400):
