@@ -92,7 +92,7 @@ steptime = 0.12
 P_x = []
 P_y = []
 samplePeriod = 1/100
-ACCELEROMETER DRIFT WHEN STATIONARY = 2.3*e−26
+ACCELEROMETER_DRIFT_WHEN_STATIONARY = 2.3*e−26
 countaccX = 0
 countaccY = 0
 
