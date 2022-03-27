@@ -23,6 +23,9 @@ sleep(0.25) #might have to increase this to 2
 GPIO.output(17, GPIO.LOW)
 sleep(0.25)
 
+try:
+    
+
 x_incr =(117.808914-117.809808)
 y_incr =(35.346394-35.347125)
 start = [35.354304, -117.817844]
@@ -78,11 +81,8 @@ while True:
 print("Latitude: {0:.6f} degrees".format(gps.latitude))
 print("Longitude: {0:.6f} degrees".format(gps.longitude))
 print("Fix quality: {}".format(gps.fix_quality))
-
-GPIO.output(17, GPIO.HIGH)
-sleep(0.5) #might have to increase this to 2
-GPIO.output(17, GPIO.LOW)
-sleep(0.5)
+for i in range(5):
+    rfm9x.send(bytes("GPS Found", "utf-8"))
 
 def contains_blue(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
