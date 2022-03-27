@@ -221,7 +221,7 @@ try:
     write_alts.writelines("{} {} {} {}".format(match, ylat, xlong, firstsqr))
     write_alts.close()
     for i in range(5):
-        rfm9x.send(bytes("{} {} {} {}".format(2, ylat, xlong, firstsqr),"utf-8"))
+        rfm9x.send(bytes("{} {} {} {}".format(match, ylat, xlong, firstsqr),"utf-8"))
     
     etc_counter = 0
     for i in range(len(img_list)//3):  #for each pi cam image
@@ -246,7 +246,10 @@ try:
     final_mode = stats.mode(guesses)
     final_guess = final_mode[0][0]
     #print(final_guess)
-    gps.update()
+    while True:
+        gps.update()
+        if gps.has_fix:
+            break
     ylat = gps.latitude
     xlong = gps.longitude 
     firstsqr = -1
@@ -295,7 +298,10 @@ try:
     final_mode = stats.mode(guesses)
     final_guess = final_mode[0][0]
     #print(final_guess)
-    gps.update()
+    while True:
+        gps.update()
+        if gps.has_fix:
+            break
     ylat = gps.latitude
     xlong = gps.longitude 
     firstsqr = -1
