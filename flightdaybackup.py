@@ -196,84 +196,87 @@ try:
     write_alts.writelines("past the loop")
     write_alts.close()
     
-      #accel processing    
-    def quaternconj(q):
-        q = [q[0], −q[1], −q[2], −q[3]]
-        return q
-    def quaternprod(a ,b):
-        ab = [0, 0, 0, 0]
-        ab[0] = a[0] ∗ b[0] − a[1] ∗ b[1] − a[2] ∗ b[2] − a[3] ∗ b[3]
-        ab[1] = a[0] ∗ b[1] + a[1] ∗ b[0] + a[2] ∗ b[3] − a[3] ∗ b[2]
-        59
-        ab[2] = a[0] ∗ b[2] − a[1] ∗ b[3] + a[2] ∗ b[0] + a[3] ∗ b[1]
-        ab[3] = a[0] ∗ b[3] + a[1] ∗ b[2] − a[2] ∗ b[1] + a[3] ∗ b[0]
-        return ab
-    def quaternrotate(acc, q):
-        x = quaternprod(q, [0, acc[0], acc[1], acc[2]])
-        y = quaternprod(x , quaternconj(q))
-        z = np.array([y[1], y[2], y[3]])
-        return z
-    
-    accels = []
-    timeslist = []
-    q_list = [] 
-    while sum_time<7: #how long to check for
-        current = time.time()
-        #sleep(0.07)   
-        final = time.time()-current
-        timeslist.append(final)
-        accels.append(sensor.linear_acceleration)
-        quat = sensor.quaternion
-        q_list.append(quat)
-        sum_time += final
-        
-    lin_accel_old = np.zeros((1,3))
-    linVel_old = np.zeros((1,3))
-    linVel_new = np.zeros((1,3))
-    linPos_old = np.zeros((1,3))
-    linPos_new = np.zeros((1,3))
-    #steptime varies from list
-    P_x = []
-    P_y = []
-    samplePeriod = 1/100
-    ACCELEROMETER_DRIFT_WHEN_STATIONARY = 2.3*e−26
-        
-    for i in range(len(timeslist)):
-        lin_acc = accels[i]
-        steptime = timeslist[i]
-        q = q_list[i]
-        
-        accMagnitude = sqrt((lin_acc[0] ∗ lin_acc[0]) + (lin_acc[1] ∗ lin_acc[1]) + (lin_acc[2] ∗ lin_acc[2]) )
-        # print(accMagnitude)
-        filterCutoff = 0.001
-        butterFilterB, butterFilterA = signal.butter(1, (2 ∗ filterCutoff ) / (1/samplePeriod), "highpass")
-        accMagnitudeFiltered = signal.filtfilt(butterFilterB, butterFilterA, [accMagnitude,accMagnitude], padlen=1)
-        accMagnitudeFiltered = abs(accMagnitudeFiltered)
-        # print(accMagnitudeFiltered)
+    try:
+          #accel processing    
+        def quaternconj(q):
+            q = [q[0], −q[1], −q[2], −q[3]]
+            return q
+        def quaternprod(a ,b):
+            ab = [0, 0, 0, 0]
+            ab[0] = a[0] ∗ b[0] − a[1] ∗ b[1] − a[2] ∗ b[2] − a[3] ∗ b[3]
+            ab[1] = a[0] ∗ b[1] + a[1] ∗ b[0] + a[2] ∗ b[3] − a[3] ∗ b[2]
+            59
+            ab[2] = a[0] ∗ b[2] − a[1] ∗ b[3] + a[2] ∗ b[0] + a[3] ∗ b[1]
+            ab[3] = a[0] ∗ b[3] + a[1] ∗ b[2] − a[2] ∗ b[1] + a[3] ∗ b[0]
+            return ab
+        def quaternrotate(acc, q):
+            x = quaternprod(q, [0, acc[0], acc[1], acc[2]])
+            y = quaternprod(x , quaternconj(q))
+            z = np.array([y[1], y[2], y[3]])
+            return z
 
-        filterCutoff = 5
-        butterFilterB, butterFilterA = signal.butter(1, (2 ∗ filterCutoff ) / (1/samplePeriod), "lowpass")
-        accMagnitudeFiltered = signal.filtfilt (butterFilterB, butterFilterA,[accMagnitudeFiltered, accMagnitudeFiltered], padlen=1)
-        stationary = accMagnitudeFiltered < ACCELEROMETER_DRIFT_WHEN_STATIONARY
-        if stationary.any():   #avoids adding noise by skipping processing post-landing
-            continue
-        
-        linPos_new += linVel_new ∗ steptime
-        P_x.append(linPos_new[0, 0])
-        P_y.append(linPos_new[0, 1])
+        accels = []
+        timeslist = []
+        q_list = [] 
+        while sum_time<7: #how long to check for
+            current = time.time()
+            #sleep(0.07)   
+            final = time.time()-current
+            timeslist.append(final)
+            accels.append(sensor.linear_acceleration)
+            quat = sensor.quaternion
+            q_list.append(quat)
+            sum_time += final
 
-        Acc = [lin_acc [0] ∗ 9.81, lin_acc [1] ∗ 9.81, lin_acc [2] ∗ 9.81]
-        acc_new = np.matrix(quaternrotate(Acc, quaternconj(q)))
+        lin_accel_old = np.zeros((1,3))
+        linVel_old = np.zeros((1,3))
+        linVel_new = np.zeros((1,3))
+        linPos_old = np.zeros((1,3))
+        linPos_new = np.zeros((1,3))
+        #steptime varies from list
+        P_x = []
+        P_y = []
+        samplePeriod = 1/100
+        ACCELEROMETER_DRIFT_WHEN_STATIONARY = 2.3*e−26
 
-        leakRateAcc = 1
-        linVel_new = linVel_new ∗ leakRateAcc + ((lin_accel_old + ((acc_new − lin_accel_old)/2)) ∗ steptime)
-        lin_accel_old = acc_new
+        for i in range(len(timeslist)):
+            lin_acc = accels[i]
+            steptime = timeslist[i]
+            q = q_list[i]
 
-        leakRatevel = 1
-        linPos_new = linPos_new ∗ leakRatevel + (linVel_old + ((linVel_new − linVel_old)/2)) ∗ steptime
-        linVel_old = linVel_new
-        
-    final_drift = (P_x, P_y)
+            accMagnitude = sqrt((lin_acc[0] ∗ lin_acc[0]) + (lin_acc[1] ∗ lin_acc[1]) + (lin_acc[2] ∗ lin_acc[2]) )
+            # print(accMagnitude)
+            filterCutoff = 0.001
+            butterFilterB, butterFilterA = signal.butter(1, (2 ∗ filterCutoff ) / (1/samplePeriod), "highpass")
+            accMagnitudeFiltered = signal.filtfilt(butterFilterB, butterFilterA, [accMagnitude,accMagnitude], padlen=1)
+            accMagnitudeFiltered = abs(accMagnitudeFiltered)
+            # print(accMagnitudeFiltered)
+
+            filterCutoff = 5
+            butterFilterB, butterFilterA = signal.butter(1, (2 ∗ filterCutoff ) / (1/samplePeriod), "lowpass")
+            accMagnitudeFiltered = signal.filtfilt (butterFilterB, butterFilterA,[accMagnitudeFiltered, accMagnitudeFiltered], padlen=1)
+            stationary = accMagnitudeFiltered < ACCELEROMETER_DRIFT_WHEN_STATIONARY
+            if stationary.any():   #avoids adding noise by skipping processing post-landing
+                continue
+
+            linPos_new += linVel_new ∗ steptime
+            P_x.append(linPos_new[0, 0])
+            P_y.append(linPos_new[0, 1])
+
+            Acc = [lin_acc [0] ∗ 9.81, lin_acc [1] ∗ 9.81, lin_acc [2] ∗ 9.81]
+            acc_new = np.matrix(quaternrotate(Acc, quaternconj(q)))
+
+            leakRateAcc = 1
+            linVel_new = linVel_new ∗ leakRateAcc + ((lin_accel_old + ((acc_new − lin_accel_old)/2)) ∗ steptime)
+            lin_accel_old = acc_new
+
+            leakRatevel = 1
+            linPos_new = linPos_new ∗ leakRatevel + (linVel_old + ((linVel_new − linVel_old)/2)) ∗ steptime
+            linVel_old = linVel_new
+
+        final_drift = (P_x, P_y)
+    except:
+        pass
     
     guesses = []
     acc_count = 0
@@ -377,17 +380,20 @@ try:
     final_mode = stats.mode(guesses)
     final_guess = final_mode[0][0]
     #print(final_guess)
-    if abs(final_drift[0])<40 and abs(final_drift[1]<40):
-        if final_drift[0] < -30 and final_drift[1]>30:
-            final_guess = final_guess-21
-        if final_drift[0] > 30 and final_drift[1]>30:
-            final_guess = final_guess-22
-        if final_drift[0] < -30 and final_drift[1]<-30:
-            final_guess = final_guess+19
-        if final_drift[0] > 30 and final_drift[1]>30:
-            final_guess = final_guess+21
-    if final_guess < 1:
-        final_guess = final_mode[0][0]
+    try:
+        if abs(final_drift[0])<40 and abs(final_drift[1]<40):
+            if final_drift[0] < -30 and final_drift[1]>30:
+                final_guess = final_guess-21
+            if final_drift[0] > 30 and final_drift[1]>30:
+                final_guess = final_guess-22
+            if final_drift[0] < -30 and final_drift[1]<-30:
+                final_guess = final_guess+19
+            if final_drift[0] > 30 and final_drift[1]>30:
+                final_guess = final_guess+21
+        if final_guess < 1:
+            final_guess = final_mode[0][0]
+    except:
+        pass
         
     while True:
         gps.update()
