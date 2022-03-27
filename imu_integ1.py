@@ -24,10 +24,7 @@ q_list = []
 sum_time = 0
 while sum_time<30:
     current = time.time()
-    #sleep(0.07)
-    
-    # Read the calibration status, 0=uncalibrated and 3=fully calibrated.
-   
+    #sleep(0.07)   
     final = time.time()-current
     timeslist.append(final)
     accels.append(sensor.acceleration)
@@ -79,6 +76,41 @@ samplePeriod = 1/100
 ACCELEROMETER_DRIFT_WHEN_STATIONARY = 2.3*e−26
 countaccX = 0
 countaccY = 0
+
+accMagnitude = sqrt((lin_acc[0] ∗ lin_acc[0]) + (lin_acc[1] ∗ lin_acc[1]) + (lin_acc[2] ∗ lin_acc[2]) )
+# print(accMagnitude)
+filterCutoff = 0.001
+butterFilterB, butterFilterA = signal.butter(1, (2 ∗ filterCutoff ) / (1/samplePeriod), "highpass")
+accMagnitudeFiltered = signal.filtfilt(butterFilterB, butterFilterA, [accMagnitude,accMagnitude], padlen=1)
+accMagnitudeFiltered = abs(accMagnitudeFiltered)
+# print(accMagnitudeFiltered)
+
+filterCutoff = 5
+butterFilterB, butterFilterA = signal.butter(1, (2 ∗ filterCutoff ) / (1/samplePeriod), "lowpass")
+accMagnitudeFiltered = signal.filtfilt (butterFilterB, butterFilterA,[accMagnitudeFiltered, accMagnitudeFiltered], padlen=1)
+stationary = accMagnitudeFiltered < ACCELEROMETER_DRIFT_WHEN_STATIONARY
+
+if stationary.any():
+linVel_new =np.zeros((1, 3))
+linPos_new += linVel_new ∗ steptime
+P_x.append(linPos_new[0, 0])
+P_y.append(linPos_new[0, 1])
+lin_accel_old = np.zeros((1, 3))
+linVel_old = np.zeros((1,3))
+conetinue
+
+Acc = [lin_acc [0] ∗ 9.81, lin_acc [1] ∗ 9.81, lin_acc [2] ∗ 9.81]
+acc_new = np.matrix(quaternrotate(Acc, quaternconj(q)))
+
+leakRateAcc = 1
+linVel_new = linVel_new ∗ leakRateAcc + ((lin_accel_old + ((acc_new − lin_accel_old)/2)) ∗ steptime)
+lin_accel_old = acc_new
+
+leakRatevel = 1
+linPos_new = linPos_new ∗ leakRatevel + (linVel_old + ((linVel_new − linVel_old)/2)) ∗ steptime
+linVel_old = linVel_new
+
+
 
 
     
