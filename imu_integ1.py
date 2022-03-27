@@ -47,4 +47,12 @@ while sum_time<30:
     sum_time += final
     print('Heading={0:0.2F} Roll={1:0.2F} Pitch={2:0.2F}\tSys_cal={3} Gyro_cal={4} Accel_cal={5} Mag_cal={6}'.format(
           heading, roll, pitch, sys, gyro, accel, mag))
+#put the read, save to file, and append to list into a try: except: pass in the main code
+#also add a try: except: pass to the receiver code to prevent byte error    
+lin_accel_old = np.zeros((1,3))
+lin_vel_old = np.zeros((1,3))
+lin_vel_new = np.zeros((1,3))
+lin_pos_old = np.zeros((1,3))
+lin_pos_new = np.zeros((1,3))
+
     
