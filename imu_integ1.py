@@ -49,10 +49,48 @@ while sum_time<30:
           heading, roll, pitch, sys, gyro, accel, mag))
 #put the read, save to file, and append to list into a try: except: pass in the main code
 #also add a try: except: pass to the receiver code to prevent byte error    
+
+def read_imu(data_package1):
+    euler_data = [data_package1[0],data_package1[1], data_package1[2]]
+    accel_data = [data_package1[3]/9.81,data_package1[4]/9.81, data_package1[5]/9.81]
+    linear_data = [data_package1[6]/9.81, data_package1[7]/9.81, data_package1[8]/9.81]
+    q = [data_package1[9], data_package1[10], data_package1[11], data_package1[12]]
+    # q = [ data package1[10], data package1[11], data package1[12],data package1[9]]
+    return euler_data, accel_data, linear_data , q
+def quaternconj(q):
+    q = [q[0], −q[1], −q[2], −q[3]]
+    return q
+def quaternprod(a ,b):
+    ab = [0, 0, 0, 0]
+    ab[0] = a[0] ∗ b[0] − a[1] ∗ b[1] − a[2] ∗ b[2] − a[3] ∗ b[3]
+    ab[1] = a[0] ∗ b[1] + a[1] ∗ b[0] + a[2] ∗ b[3] − a[3] ∗ b[2]
+    59
+    ab[2] = a[0] ∗ b[2] − a[1] ∗ b[3] + a[2] ∗ b[0] + a[3] ∗ b[1]
+    ab[3] = a[0] ∗ b[3] + a[1] ∗ b[2] − a[2] ∗ b[1] + a[3] ∗ b[0]
+    return ab
+def quaternrotate(acc, q):
+    x = quaternprod(q, [0, acc[0], acc[1], acc[2]])
+    y = quaternprod(x , quaternconj(q))
+    z = np.array([y[1], y[2], y[3]])
+    return z
+def reset_data ():
+    lin_accel_old = np.zeros((1, 3))
+    linVel_old= np.zeros((1, 3))
+    linPos_old = np.array((−2.4, 0, 0))
+    return linVel_old , lin_accel_old , linPos_old
+
 lin_accel_old = np.zeros((1,3))
-lin_vel_old = np.zeros((1,3))
-lin_vel_new = np.zeros((1,3))
-lin_pos_old = np.zeros((1,3))
-lin_pos_new = np.zeros((1,3))
+linVel_old = np.zeros((1,3))
+linVel_new = np.zeros((1,3))
+linPos_old = np.zeros((1,3))
+linPos_new = np.zeros((1,3))
+steptime = 0.12
+P_x = []
+P_y = []
+samplePeriod = 1/100
+ACCELEROMETER DRIFT WHEN STATIONARY = 2.3*e−26
+countaccX = 0
+countaccY = 0
+
 
     
