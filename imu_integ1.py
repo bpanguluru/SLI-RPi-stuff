@@ -2,6 +2,10 @@ import logging
 import sys
 import time
 from Adafruit_BNO055 import BNO055
+import socket, pickle , time
+from math import sqrt
+import numpy as np
+from scipy import signal
 
 # Enable verbose debug logging if -v is passed as a parameter.
 if len(sys.argv) == 2 and sys.argv[1].lower() == '-v':
@@ -76,7 +80,7 @@ def quaternrotate(acc, q):
 def reset_data ():
     lin_accel_old = np.zeros((1, 3))
     linVel_old= np.zeros((1, 3))
-    linPos_old = np.array((−2.4, 0, 0))
+    linPos_old = np.array((-2.4, 0, 0))
     return linVel_old , lin_accel_old , linPos_old
 
 lin_accel_old = np.zeros((1,3))
