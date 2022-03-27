@@ -34,7 +34,7 @@ accels = []
 sum_time = 0
 while sum_time<30:
     current = time.time()
-    sleep(0.07)
+    #sleep(0.07)
     # Read the Euler angles for heading, roll, pitch (all in degrees).
     heading, roll, pitch = bno.read_euler()
     # Read the calibration status, 0=uncalibrated and 3=fully calibrated.
